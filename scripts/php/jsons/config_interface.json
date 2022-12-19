@@ -1,0 +1,19 @@
+{
+    "titre" : "Dashboard Crypto",
+    "liste_bot" : [
+        {
+            "nom_bot" : "Big Will Spot",
+            "wallet_db" : "big_will",
+            "orderbook_db" : "big_will_orderBook",
+            "type" : "spots",
+            "initale_wallet" : 20
+        },
+        {
+            "nom_bot" : "Bollinger Futures",
+            "wallet_db" : "boll_strat",
+            "orderbook_db" : "boll_strat_orderBook",
+            "type" : "futures",
+            "initale_wallet" : 16
+        }
+    ]
+}
