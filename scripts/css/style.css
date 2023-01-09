@@ -6,3 +6,10 @@ body{
     margin-bottom: 20px;
     color: #bdc2c8;
   }
+
+
+  .tv-chart-container {
+    width: 50%;
+    height: 700px;
+    float: left;
+  }

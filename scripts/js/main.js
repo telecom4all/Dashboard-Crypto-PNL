@@ -23,6 +23,7 @@ function traitement_config_interface(arg){
         html = html + '<li><a href="#' + nom_bot_no_space + '">' + nom_bot + '</a></li>';
     })
 
+    html = html + '<li><a href="#tradingview_dashboard">TradingView Dashboard</a></li>';
 
     html = html + '<div id="general">';
     html = html + '<h2><center>Global</center></h2>';
@@ -75,13 +76,171 @@ function traitement_config_interface(arg){
             
         html = html + '</div>';
     })
+
+
+
+    html = html + '<div id="tradingview_dashboard">';
+        html = html + '<h2><center>tradingview_dashboard</center></h2>';
+        
+        html = html + '<div id="tv-chart-container-1" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-2" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-3" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-4" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-5" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-6" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-7" class="tv-chart-container"></div>';
+        html = html + '<div id="tv-chart-container-8" class="tv-chart-container"></div>';
+        
+        
+    html = html + '</div>';
+
+
+
+
+
+
+
+
     html = html + "</ul>";
     $("#tabs").html(html);
     $( "#tabs" ).tabs();
 
     affiche_graph(arg);
     affiche_trades(arg);
+    affiche_trading_view()
+
 }
+
+
+function affiche_trading_view(){
+    new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:BTCUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-1",
+          
+        }
+      );
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:ETHUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-2"
+        }
+      );
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:MATICUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-3"
+        }
+      );
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:AVAXUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-4"
+        }
+      );
+
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:XRPUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-5"
+        }
+      );
+
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "BINANCE:DOGEUSDT",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-6"
+        }
+      );
+
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "FX_IDC:USD",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-7"
+        }
+      ); 
+      
+      new TradingView.widget(
+        {
+          "autosize": true,
+          "symbol": "AAPL",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "fr",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv-chart-container-8"
+        }
+      );
+
+}
+
 
 function affiche_trades(arg){
     var liste_bots = arg.liste_bots;
@@ -105,12 +264,12 @@ function affiche_trades(arg){
         
         html = html + '</tr>';
     
-        console.dir(liste_trade)
+        //console.dir(liste_trade)
 
         if(type == "spots"){
 
             liste_trade.forEach((item, index) => {
-                console.log(item)
+                //console.log(item)
                 var type_trade = "";
                 if(item.type == 1){
                     type_trade = "VENTE"
@@ -140,7 +299,7 @@ function affiche_trades(arg){
         }
         if(type == "futures"){
             liste_trade.forEach((item, index) => {
-                console.log(item)
+                //console.log(item)
                 var type_trade = "";
                 if(item.type == 1){
                     type_trade = "OPEN SHORT"
@@ -439,5 +598,19 @@ function  requete_server(data, url, callback){
 
   const getLastArrItem = (arr) => { 
     let lastItem=arr[arr.length-1];  
-    console.log(`Last element is ${lastItem}`); 
+    //console.log(`Last element is ${lastItem}`); 
   } 
+
+
+  // Crée une fonction pour ouvrir le widget en plein écran
+function openFullscreen() {
+    if (div.requestFullscreen) {
+      div.requestFullscreen();
+    } else if (div.mozRequestFullScreen) {
+      div.mozRequestFullScreen();
+    } else if (div.webkitRequestFullscreen) {
+      div.webkitRequestFullscreen();
+    } else if (div.msRequestFullscreen) {
+      div.msRequestFullscreen();
+    }
+  }

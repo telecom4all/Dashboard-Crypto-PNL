@@ -8,6 +8,7 @@
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/annotations.js"></script>
     <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     
 </head>
 
@@ -39,4 +40,6 @@
     });
     
 </script>
+
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </html>  
