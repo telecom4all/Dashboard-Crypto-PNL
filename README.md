@@ -1,84 +1,214 @@
-# Dashboard-Crypto-PNL
- Dashboard Crypto PNL
+# Installation et configuration d'un serveur Apache2, PHP, MySQL et PhpMyAdmin sur Debian
 
+Ce tutoriel vous guidera pas à pas dans l'installation et la configuration d'un serveur Apache2, PHP, MySQL et PhpMyAdmin sur Debian. Une fois le serveur installé et configuré, nous allons créer un virtualhost et le configurer pour afficher un fichier README.md sur Github.
 
-1. Installation de Apache2
+## Prérequis
 
-• Ouvrez un terminal et connectez-vous en tant qu'utilisateur root.
-• Mettez à jour votre système en exécutant la commande suivante :
+Avant de commencer, vous aurez besoin des éléments suivants :
 
-# apt-get update
+- Une machine virtuelle ou physique avec Debian.
 
-• Installez le serveur Apache2 en exécutant la commande suivante :
+- Un nom de domaine pointant vers votre serveur.
 
-# apt-get install apache2
+- Une connexion Internet.
 
-• Vérifiez que le serveur Apache2 a été correctement installé en exécutant la commande suivante :
+## Installation et configuration d'Apache
 
-# apache2 -v
+1. Commencez par mettre à jour votre système :
 
-2. Installation de PHP
+    ```
+    sudo apt-get update
+    ```
 
-• Installez PHP et les modules nécessaires en exécutant la commande suivante :
+2. Installez Apache :
 
-# apt-get install php libapache2-mod-php php-mcrypt php-mysql
+    ```
+    sudo apt-get install apache2
+    ```
 
-• Vérifiez que PHP a été correctement installé en exécutant la commande suivante :
+3. Vérifiez que le service Apache est bien lancé :
 
-# php -v
+    ```
+    sudo service apache2 status
+    ```
 
-3. Installation de MySQL
+4. Vous devriez voir un message indiquant que le service Apache est en cours d'exécution. Si ce n'est pas le cas, lancez le service :
 
-• Installez MySQL en exécutant la commande suivante :
+    ```
+    sudo service apache2 start
+    ```
 
-# apt-get install mysql-server
+5. Vérifiez que le serveur Apache est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost`. Vous devriez voir la page par défaut d'Apache.  
 
-• Configurez le serveur MySQL en exécutant la commande suivante :
+## Installation et configuration de PHP
 
-# mysql_secure_installation
+1. Installez PHP et les modules nécessaires :
 
-• Vérifiez que MySQL a été correctement installé en exécutant la commande suivante :
+    ```
+    sudo apt-get install php libapache2-mod-php php-mysql
+    ```
 
-# mysql -V
+2. Vérifiez que le module PHP est chargé en exécutant la commande suivante :
 
-4. Installation de phpMyAdmin
+    ```
+    sudo apache2ctl -M | grep php
+    ```
 
-• Installez phpMyAdmin en exécutant la commande suivante :
+3. Vous devriez voir le module `php7.0` dans la liste des modules chargés. Si ce n'est pas le cas, chargez le module manuellement :
 
-# apt-get install phpmyadmin
+    ```
+    sudo a2enmod php7.0
+    ```
 
-• Configurez phpMyAdmin en exécutant la commande suivante :
+4. Redémarrez le serveur Apache pour prendre en compte les modifications :
 
-# dpkg-reconfigure phpmyadmin
+    ```
+    sudo service apache2 restart
+    ```
 
-• Vérifiez que phpMyAdmin a été correctement installé en exécutant la commande suivante :
+5. Vérifiez que PHP fonctionne correctement en créant un fichier `info.php` à la racine de votre serveur Apache (`/var/www/html`) avec le code suivant :
 
-# phpmyadmin -V
+    ```php
+    <?php
+    phpinfo();
+    ?>
+    ```
 
-5. Configuration du VirtualHost
+6. Ouvrez votre navigateur et rendez-vous à l'adresse `http://localhost/info.php`. Vous devriez voir la page PHP Info.
 
-• Créez un fichier de configuration pour votre VirtualHost en exécutant la commande suivante :
+## Installation et configuration de MySQL
 
-# nano /etc/apache2/sites-available/dashboard.domain.com.conf
+1. Installez MySQL :
 
-• Ajoutez le contenu suivant à votre fichier de configuration :
+    ```
+    sudo apt-get install mysql-server
+    ```
 
-<VirtualHost *:80>
-    ServerName dashboard.domain.com
-    ServerAdmin webmaster@example.com
-    DocumentRoot /var/www/dashboard.domain.com/public_html
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
+2. Configurez MySQL en exécutant la commande `mysql_secure_installation` :
 
-• Activez votre VirtualHost en exécutant la commande suivante :
+    ```
+    sudo mysql_secure_installation
+    ```
 
-# a2ensite dashboard.domain.com.conf
+3. Suivez les instructions à l'écran pour configurer les paramètres de sécurité de MySQL.
 
-• Redémarrez le serveur Apache2 en exécutant la commande suivante :
+4. Vérifiez que MySQL est en cours d'exécution :
 
-# service apache2 restart
+    ```
+    sudo service mysql status
+    ```
 
-Vous avez maintenant installé et configuré un serveur Apache2, PHP, MySQL et phpMyAdmin avec un VirtualHost sur Debian.
+5. Vous devriez voir un message indiquant que le service MySQL est en cours d'exécution. Si ce n'est pas le cas, lancez le service :
 
+    ```
+    sudo service mysql start
+    ```
 
+## Installation et configuration de PhpMyAdmin
+
+1. Installez PhpMyAdmin :
+
+    ```
+    sudo apt-get install phpmyadmin
+    ```
+
+2. Sélectionnez `Apache2` lorsqu'on vous demande quel serveur web utiliser.
+
+3. Saisissez le mot de passe de l'utilisateur `root` de MySQL lorsqu'on vous le demande.
+
+4. Sélectionnez `Yes` lorsqu'on vous demande si vous souhaitez configurer la base de données PhpMyAdmin avec `dbconfig-common`.
+
+5. Saisissez le mot de passe de l'utilisateur `phpmyadmin` de MySQL lorsqu'on vous le demande.
+
+6. Redémarrez le serveur Apache pour prendre en compte les modifications :
+
+    ```
+    sudo service apache2 restart
+    ```
+
+7. Vérifiez que PhpMyAdmin est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost/phpmyadmin`. Vous devriez voir la page d'accueil de PhpMyAdmin.
+
+## Configuration d'un VirtualHost
+
+1. Créez un fichier de configuration pour votre VirtualHost :
+
+    ```
+    sudo nano /etc/apache2/sites-available/example.com.conf
+    ```
+
+2. Ajoutez le code suivant au fichier :
+
+    ```
+    <VirtualHost *:80>
+        ServerName example.com
+        ServerAdmin webmaster@example.com
+        DocumentRoot /var/www/example.com/public_html
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>
+    ```
+
+3. Créez un dossier pour votre VirtualHost :
+
+    ```
+    sudo mkdir -p /var/www/example.com/public_html
+    ```
+
+4. Créez un fichier `index.html` pour votre VirtualHost :
+
+    ```
+    sudo nano /var/www/example.com/public_html/index.html
+    ```
+
+5. Ajoutez le code suivant au fichier :
+
+    ```
+    <html>
+    <head>
+        <title>Welcome to Example.com!</title>
+    </head>
+    <body>
+        <h1>Success! The example.com virtual host is working!</h1>
+    </body>
+    </html>
+    ```
+
+6. Activez le VirtualHost :
+
+    ```
+    sudo a2ensite example.com.conf
+    ```
+
+7. Redémarrez le serveur Apache pour prendre en compte les modifications :
+
+    ```
+    sudo service apache2 restart
+    ```
+
+8. Vérifiez que votre VirtualHost fonctionne correctement en ouvrant votre navigateur et en vous rendant à l'adresse `http://example.com`. Vous devriez voir la page `index.html` que vous avez créée.
+
+## Configuration du fichier README.md
+
+1. Créez un fichier `README.md` à la racine de votre serveur Apache (`/var/www/html`) :
+
+    ```
+    sudo nano /var/www/html/README.md
+    ```
+
+2. Ajoutez le code suivant au fichier :
+
+    ```
+    # Bienvenue sur votre serveur Apache !
+    ```
+
+3. Redémarrez le serveur Apache pour prendre en compte les modifications :
+
+    ```
+    sudo service apache2 restart
+    ```
+
+4. Vérifiez que le fichier `README.md` est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost/README.md`. Vous devriez voir le contenu du fichier `README.md`.
+
+## Conclusion
+
+Vous avez maintenant un serveur Apache, PHP, MySQL et PhpMyAdmin installé et configuré avec un VirtualHost et un fichier README.md affiché sur Github. Vous pouvez maintenant commencer à développer vos applications web 
