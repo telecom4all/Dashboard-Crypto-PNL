@@ -208,5 +208,241 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 4. Vérifiez que le fichier `README.md` est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost/README.md`. Vous devriez voir le contenu du fichier `README.md`.
 
 ## Installation du dashboard
-git clone 
+git clone https://github.com/telecom4all/Dashboard-Crypto-PNL.git
 
+Copiez le contenu du dossier Dashboard-Crypto-PNL à la racine de votre virtualhost (dans l'exemple ci dessus : /var/www/example.com/public_html)
+
+Tout se passe dans ces 2 fichiers, scripts/php/jsons/config_interface.json pour gérer l'interface et les bots a afficher 
+et scripts/php/jsons/config_server.json qui contient le infos de la connexion a la base de donnée
+
+par souci de sécurité il est conseiller de mettre le fichier config_server.json en dehors du repertoire du virtualhost dans /home/user par ex pour evité que des infos sensibles soit visible sur le net
+il faudra alors modifier le path du fichier à la ligne 2 du fichier scripts/php/interface.php  
+
+```
+changer cette ligne :
+
+$server_json = file_get_contents("jsons/config_server.json");
+
+par : 
+
+$server_json = file_get_contents("path/jsons/config_server.json");
+```
+
+## Configuration du dashboard
+### configuration mysql 
+
+1. Création de l'utilisateur mysql et la base de donnée dashboard
+   ```
+   mysql -u root -p
+   ```
+
+   ```
+   GRANT ALL PRIVILEGES ON dashboard.* TO 'nouvel_utilisateur'@'localhost' IDENTIFIED BY 'mot_de_passe';
+   ```
+
+   ```
+    FLUSH PRIVILEGES;
+   ```
+
+2. Importez le fichier db.sql dans le serveur mysql
+   
+   Modifiez le fichier db.sql pour qu'il s'adapte a vos bots
+
+    ```
+
+    changer dans cette partie qui gère l'évolution du wallet : 
+
+    CREATE TABLE `boll_strat` (
+    `id` int NOT NULL,
+    `date` date NOT NULL,
+    `wallet` float NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    changez boll_strat par le nom que vous vouler mais il faudra un nom par bot de trading
+
+    ```
+    ```
+
+    changer dans cette partie qui gère l'historique de l'orderbook: 
+
+    CREATE TABLE `boll_strat_orderBook` (
+    `id` int NOT NULL,
+    `type` int DEFAULT NULL,
+    `amount` float DEFAULT NULL,
+    `symbol` varchar(45) DEFAULT NULL,
+    `price` float DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    changez boll_strat_orderBook  par le nom que vous vouler mais il faudra un nom par bot de trading
+
+
+    ```
+
+
+   Connectez vous a mysql avec l'utilisateur que l'on viens de créer :
+   ```
+   mysql -u [nom d'utilisateur] -p
+   ```
+
+   on selectionne la base de donnée dashboard
+   ```
+   USE dashboard;
+   ```
+
+   on importe le fichier db.js
+   ```
+   source chemin/vers/fichier_de_sauvegarde.sql
+   ```
+
+
+
+
+### Fichier : scripts/php/jsons/config_server.json
+c'est ici qu'il faut renseigner les infos de connexion au serveur mysql 
+
+```
+{
+    "servername" : "",
+    "username" : "",
+    "password" : "",
+    "dbname" : ""
+    
+}
+```
+### Fichier : scripts/php/jsons/config_interface.json
+```
+{
+    "titre" : "Dashboard Crypto",   --> nom du dashbord
+    "liste_bot" : [
+        {
+            "nom_bot" : "Big Will Spot",               -->  Nom du bot
+            "wallet_db" : "big_will",                  -->  nom de la table pour l'evolution du wallet
+            "orderbook_db" : "big_will_orderBook",     -->  nom de la table pour l'historique de l'orderbook     
+            "type" : "spots",                          --> type de bot (spot ou futures)
+            "initale_wallet" : 20                      --> Montant initial los du lancement du bot 
+        },
+        {
+            "nom_bot" : "Bollinger Futures",
+            "wallet_db" : "boll_strat",
+            "orderbook_db" : "boll_strat_orderBook",
+            "type" : "futures",
+            "initale_wallet" : 16
+        }
+    ]
+}
+```
+
+
+### Fichier : scripts\js\main_dashboard.js
+dans la première partie vous pouvez modifier la liste des coins que vous voulez surveiller ainsi que leur indicateur avec leur paramètres
+
+```
+// liste des widget tradingview et leur config
+var symbols_tradingview = [
+  { 
+    "symbol": "BINANCE:BTCUSDT",        
+    "interval": "D", 
+    "theme": "light", 
+    "timezone" : "Etc/UTC",
+    "container_id": "tv-chart-container-1",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "BINANCE:ETHUSDT", 
+    "interval": "D", 
+    "theme": "dark", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-2",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "BINANCE:MATICUSDT", 
+    "interval": "D", 
+    "theme": "dark", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-3",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "BINANCE:AVAXUSDT", 
+    "interval": "D", 
+    "theme": "light", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-4",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "BINANCE:XRPUSDT", 
+    "interval": "D", 
+    "theme": "light", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-5",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "BINANCE:DOGEUSDT", 
+    "interval": "D", 
+    "theme": "dark", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-6",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "USDX", 
+    "interval": "D", 
+    "theme": "dark", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-7",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  },
+  { 
+    "symbol": "AAPL", 
+    "interval": "D", 
+    "theme": "light", 
+    "timezone" : "Etc/UTC", 
+    "container_id": "tv-chart-container-8",
+    "indicators": [
+      { "id": "BB", "params": {"length": 20} }, 
+      { "id": "MACD", "params": {"fastPeriod": 12, "slowPeriod": 26, "signalPeriod": 9} }, 
+      { "id": "IchimokuCloud", "params": {"tenkanPeriod": 9, "kijunPeriod": 26, "senkouPeriod": 52} }, 
+      { "id": "RSI", "params": {"length": 14} }
+    ] 
+  }
+];
+
+```
