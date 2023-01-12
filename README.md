@@ -1,8 +1,6 @@
-# Installation et configuration d'un serveur Apache2, PHP, MySQL et PhpMyAdmin sur Debian
+# Dashboard Crypto pour avoir les résultats de bot de trading et quelque infos
 
-Ce tutoriel vous guidera pas à pas dans l'installation et la configuration d'un serveur Apache2, PHP, MySQL et PhpMyAdmin sur Debian. Une fois le serveur installé et configuré, nous allons créer un virtualhost et le configurer pour afficher un fichier README.md sur Github.
-
-## Prérequis
+## Prérequis avoir un serveur web avec php et mysql s'installé
 
 Avant de commencer, vous aurez besoin des éléments suivants :
 
@@ -12,7 +10,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 - Une connexion Internet.
 
-## Installation et configuration d'Apache
+### Installation et configuration d'Apache
 
 1. Commencez par mettre à jour votre système :
 
@@ -40,7 +38,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 5. Vérifiez que le serveur Apache est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost`. Vous devriez voir la page par défaut d'Apache.  
 
-## Installation et configuration de PHP
+### Installation et configuration de PHP
 
 1. Installez PHP et les modules nécessaires :
 
@@ -76,7 +74,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 6. Ouvrez votre navigateur et rendez-vous à l'adresse `http://localhost/info.php`. Vous devriez voir la page PHP Info.
 
-## Installation et configuration de MySQL
+### Installation et configuration de MySQL
 
 1. Installez MySQL :
 
@@ -104,7 +102,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
     sudo service mysql start
     ```
 
-## Installation et configuration de PhpMyAdmin
+### Installation et configuration de PhpMyAdmin
 
 1. Installez PhpMyAdmin :
 
@@ -128,7 +126,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 7. Vérifiez que PhpMyAdmin est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost/phpmyadmin`. Vous devriez voir la page d'accueil de PhpMyAdmin.
 
-## Configuration d'un VirtualHost
+### Configuration d'un VirtualHost
 
 1. Créez un fichier de configuration pour votre VirtualHost :
 
@@ -187,7 +185,7 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 8. Vérifiez que votre VirtualHost fonctionne correctement en ouvrant votre navigateur et en vous rendant à l'adresse `http://example.com`. Vous devriez voir la page `index.html` que vous avez créée.
 
-## Configuration du fichier README.md
+### Configuration du fichier README.md
 
 1. Créez un fichier `README.md` à la racine de votre serveur Apache (`/var/www/html`) :
 
@@ -209,6 +207,6 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
 4. Vérifiez que le fichier `README.md` est accessible en ouvrant votre navigateur et en vous rendant à l'adresse `http://localhost/README.md`. Vous devriez voir le contenu du fichier `README.md`.
 
-## Conclusion
+## Installation du dashboard
+git clone 
 
-Vous avez maintenant un serveur Apache, PHP, MySQL et PhpMyAdmin installé et configuré avec un VirtualHost et un fichier README.md affiché sur Github. Vous pouvez maintenant commencer à développer vos applications web 
