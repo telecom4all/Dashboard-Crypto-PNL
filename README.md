@@ -1,4 +1,8 @@
 # Dashboard Crypto pour avoir les résultats de bot de trading et quelque infos
+vous pouvez trouver ici les bots de trading associé
+```
+https://github.com/telecom4all/Bot_Bitget_Multi
+```
 
 ## Prérequis avoir un serveur web avec php et mysql s'installé
 
