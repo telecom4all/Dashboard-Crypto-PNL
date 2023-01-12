@@ -1,7 +1,7 @@
 {
-    "servername" : "",
-    "username" : "",
-    "password" : "",
-    "dbname" : ""
+    "servername" : "localhost",
+    "username" : "cryptobot",
+    "password" : "tyvek$S170276",
+    "dbname" : "cryptobot"
     
 }

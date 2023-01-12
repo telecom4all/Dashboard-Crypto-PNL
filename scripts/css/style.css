@@ -13,3 +13,13 @@ body{
     height: 700px;
     float: left;
   }
+
+  .macro-container {
+    width: 50%;
+    height: 700px;
+    float: left;
+  }
+
+  .fullsize{
+    width: 100%;
+  }
