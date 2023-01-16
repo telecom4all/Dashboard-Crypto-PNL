@@ -14,10 +14,7 @@ config.read('config-bot.cfg')
 apiKey = str(config['BITGET.FUTURES.1']['apiKey'])
 secret = str(config['BITGET.FUTURES.1']['secret'])
 password = str(config['BITGET.FUTURES.1']['password'])
-
-#le nom de l'exchange si vous avez plusieur compte on peu mettre binance1 binance2 ... mais il faudra mettre le meme nom dans le dashboard
-EXCHANGE_NAME = "bitget_futures_1"
-
+EXCHANGE_NAME = str(config['BITGET.FUTURES.1']['exchange_name'])
 ######################################
 #### FIN de la partie a modifier #####
 ######################################

@@ -214,12 +214,35 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 ## Installation du dashboard
 git clone https://github.com/telecom4all/Dashboard-Crypto-PNL.git
 
-Copiez le contenu du dossier Dashboard-Crypto-PNL à la racine de votre virtualhost (dans l'exemple ci dessus : /var/www/example.com/public_html)
+Copiez le contenu du dossier Dashboard-Crypto-PNL/dashboard à la racine de votre virtualhost (dans l'exemple ci dessus : /var/www/example.com/public_html)
 
-Tout se passe dans ces 2 fichiers, scripts/php/jsons/config_interface.json pour gérer l'interface et les bots a afficher 
-et scripts/php/jsons/config_server.json qui contient le infos de la connexion a la base de donnée
+Tout se passe dans ces 3 fichiers, scripts/php/jsons/config_interface.json pour gérer l'interface et les bots a afficher 
+et scripts/php/jsons/config_server.json qui contient le infos de la connexion a la base de donnée et scripts/php/jsons/authentification.json ou se trouve votre mot de passe hashé par cette ligne de commande sous linux : 
 
-par souci de sécurité il est conseiller de mettre le fichier config_server.json en dehors du repertoire du virtualhost dans /home/user par ex pour evité que des infos sensibles soit visible sur le net
+
+```
+php -r "echo password_hash('password1234', PASSWORD_DEFAULT);"
+
+```
+
+par defaut le mot de passe est : password1234 changé le avec la ligne ci dessus puis remplacer le dans le fichier scripts/php/jsons/authentification.json!! 
+
+par souci de sécurité il est conseiller de mettre le fichier authentification.json  en dehors du repertoire du virtualhost dans /home/user par ex pour evité que des infos sensibles soit visible sur le net
+il faudra alors modifier le path du fichier à la ligne 22 du fichier scripts/php/interface.php  
+
+```
+changer cette ligne :
+
+$json = file_get_contents("jsons/authentification.json");
+
+par : 
+
+$json = file_get_contents("path/authentification.json");
+```
+
+
+
+par souci de sécurité il est conseiller aussi de mettre le fichier config_server.json  en dehors du repertoire du virtualhost dans /home/user par ex pour evité que des infos sensibles soit visible sur le net
 il faudra alors modifier le path du fichier à la ligne 2 du fichier scripts/php/interface.php  
 
 ```
@@ -316,7 +339,39 @@ c'est ici qu'il faut renseigner les infos de connexion au serveur mysql
 ### Fichier : scripts/php/jsons/config_interface.json
 ```
 {
-    "titre" : "Dashboard Crypto",   --> nom du dashbord
+    "titre" : "Dashboard Crypto",               --> nom du dashbord
+    "exchanges_infos" : {
+        "isExchangeRecap" : "True",             --> True si on veut rajouter l'option de visualisation de l'evolution du wallet sur différent exchange voir plus bas pour la configuration du "module python a installer" sinon on met a false
+
+        "nom_db" : "exchanges_wallets",         --> Nom de la table de la db qui dois etre le meme que dans le fichier config-bot.cfg du module recap_balance
+        "exchanges" : [
+            { 
+                "nom_exchange" : "binance_futures_1",  --> meme nom que dans le fichier config-bot.cfg du module recap_balance
+                "nom_dashboard" : "Binance Futures 1", --> le nom que l'on veut voir afficher sur le dashboard
+                "initial_wallet" : "50.0"              --> le montant initial mis
+            },
+            { 
+                "nom_exchange" : "binance_spot_1",
+                "nom_dashboard" : "Binance Spot 1",
+                "initial_wallet" : "50.0"
+            },
+            { 
+                "nom_exchange" : "bitget_futures_1",
+                "nom_dashboard" : "Bitget Futures 1 Bot Perso",
+                "initial_wallet" : "16.0"
+            },
+            { 
+                "nom_exchange" : "bitget_spot_1",
+                "nom_dashboard" : "Bitget Spot 1 Bot Perso",
+                "initial_wallet" : "16.0"
+            },
+            { 
+                "nom_exchange" : "bitget_futures_2",
+                "nom_dashboard" : "Bitget Future 2 CopyTrading CryptoRobot",
+                "initial_wallet" : "20.0"
+            }
+        ]
+    },
     "liste_bot" : [
         {
             "nom_bot" : "Big Will Spot",               -->  Nom du bot
@@ -333,6 +388,12 @@ c'est ici qu'il faut renseigner les infos de connexion au serveur mysql
             "initale_wallet" : 16
         }
     ]
+}
+
+
+{
+    "titre" : "Dashboard Crypto",  
+    
 }
 ```
 
@@ -450,6 +511,10 @@ var symbols_tradingview = [
 ];
 
 ```
+
+
+
+# Installation du module recap_balance
 
 
 

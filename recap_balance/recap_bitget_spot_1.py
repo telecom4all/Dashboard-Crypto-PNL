@@ -15,11 +15,8 @@ config.read('config-bot.cfg')
 apiKey = str(config['BITGET.SPOT.1']['apiKey'])
 secret = str(config['BITGET.SPOT.1']['secret'])
 password = str(config['BITGET.SPOT.1']['password'])
-
-#le nom de l'exchange si vous avez plusieur compte on peu mettre binance1 binance2 ... mais il faudra mettre le meme nom dans le dashboard
-EXCHANGE_NAME = "bitget_spot_1"
-STABLECOIN = "USDT"
-
+EXCHANGE_NAME = str(config['BITGET.SPOT.1']['exchange_name'])
+STABLECOIN = str(config['BITGET.SPOT.1']['STABLECOIN'])
 ######################################
 #### FIN de la partie a modifier #####
 ######################################

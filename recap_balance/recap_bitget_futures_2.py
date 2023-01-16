@@ -14,12 +14,10 @@ config.read('config-bot.cfg')
 apiKey = str(config['BITGET.FUTURES.2']['apiKey'])
 secret = str(config['BITGET.FUTURES.2']['secret'])
 password = str(config['BITGET.FUTURES.2']['password'])
-
-#le nom de l'exchange si vous avez plusieur compte on peu mettre binance1 binance2 ... mais il faudra mettre le meme nom dans le dashboard
-EXCHANGE_NAME = "bitget_futures_2"
-
+EXCHANGE_NAME = str(config['BITGET.FUTURES.2']['exchange_name'])
 ######################################
 #### FIN de la partie a modifier #####
+######################################
 ######################################
 
 #Infos Mysql

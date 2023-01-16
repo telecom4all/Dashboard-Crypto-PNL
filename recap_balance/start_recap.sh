@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Passage dans l'environement virtuel"
-PATH=/<path>/recap_balance
+PATH=/home/angelz/recap_balance
 cd $PATH
 source $PATH/.venv/bin/activate
 
