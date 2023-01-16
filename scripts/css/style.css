@@ -1,13 +1,103 @@
 body{
     background-color: #696969
 }
-.credit {
 
-    margin-bottom: 20px;
-    color: #bdc2c8;
+/* Media Queries */
+@media (max-width: 768px) {
+  /* Styles pour les écrans de taille moyenne */
+  #menu {
+      flex-wrap: wrap;
+      justify-content: center;
   }
+  #menu button {
+      font-size: 0.8em;
+      padding: 5px 10px;
+  }
+}
+@media (max-width: 480px) {
+  /* Styles pour les écrans de petite taille */
+  #menu {
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+  #menu button {
+      font-size: 0.6em;
+      padding: 5px 10px;
+  }
+}
+/* Styles généraux */
+#menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#menu button {
+  font-size: 1.2em;
+  padding: 1% 1%;
+  border-radius: 20px;
+  border: none;
+  
+  margin: 0 1%;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+}
+.bt_menu:hover {
+  transform: scale(1.1);
+  box-shadow: 2px 2px 5px #009432;
+}
+.menu_selected {
+  background: linear-gradient(to right, #009432, #1e7145);
+  border-bottom: 2px solid #009432;
+  transform: scale(1.2);
+  box-shadow: 2px 2px 5px #009432;
+}
+
+.bp_normal{
+  background: linear-gradient(to right, #009432, #1e7145);
+  color: white;
+}
+#deconnexion{
+  background: linear-gradient(to right, #85051b, #490149);
+  color: white;
+}
+
+.credit {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #bdc2c8;
+}
+
+.titre_dashboard{
+  color: #ffffff;
+  margin: 1%;
+}
 
 
+.titre_page{
+  color: #ffffff;
+  margin: 1%;
+}
+
+
+.div_exchange{
+  color: #ffffff;
+  margin: 1%;
+  background-color: rgb(53, 52, 52);
+}
+
+.div_bot_affichage{
+  padding: 1%;
+  color: #ffffff;
+  margin: 1%;
+  background-color: rgb(53, 52, 52);
+}
+
+.div_login{
+  padding: 1%;
+  color: #ffffff;
+  margin: 1%;
+  background-color: rgb(53, 52, 52);
+}
   .tv-chart-container {
     width: 50%;
     height: 700px;
@@ -22,4 +112,12 @@ body{
 
   .fullsize{
     width: 100%;
+  }
+
+  .div_exchange{
+    margin: 1%;
+    border: 4px groove #664ef0;
+    width: 45%;
+    height: 600px;
+    float: left;
   }

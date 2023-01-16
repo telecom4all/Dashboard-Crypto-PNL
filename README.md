@@ -452,6 +452,12 @@ var symbols_tradingview = [
 ```
 
 
+
+
+généré un mot de passe pour l'interface en ligne de commande :
+
+php -r "echo password_hash('password1234', PASSWORD_DEFAULT);"
+
 # Soutien
 Ce code est disponible pour tous si vous voulez me "soutenir :-)" voici un lien d'affiliation Bitget : https://partner.bitget.com/bg/85MZE2
 
