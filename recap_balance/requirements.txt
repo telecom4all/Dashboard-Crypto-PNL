@@ -1,0 +1,7 @@
+ccxt
+datetime
+configparser
+mysql-connector-python
+
+
+
