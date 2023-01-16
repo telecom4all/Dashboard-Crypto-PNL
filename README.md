@@ -669,6 +669,7 @@ copiez le repertoire Dashboard-Crypto-PNL/recap_balance a l'emplacement de votre
 
 voila je crois ne rien avoir oublié :-) 
 
+la sécurité est moyenne et peut être amélioré mais je m'en contente pour le moment :-) les infos sensibles peuvent etre "caché" en dehors du répertoire accessible depuis internet et suivant la complexité du mot de passe choisi cela limite les souci 
 
 # Soutien
 Ce code est disponible pour tous si vous voulez me "soutenir :-)" voici un lien d'affiliation Bitget : https://partner.bitget.com/bg/85MZE2
