@@ -316,9 +316,9 @@ $server_json = file_get_contents("path/jsons/config_server.json");
    USE dashboard;
    ```
 
-   on importe le fichier db.js
+   on importe le fichier db.sql
    ```
-   source chemin/vers/fichier_de_sauvegarde.sql
+   source <path>/dashboard/db.sql
    ```
 
 
@@ -515,13 +515,160 @@ var symbols_tradingview = [
 
 
 # Installation du module recap_balance
+installation des scripts python qui vont interroger toutes X heure les exchanges pour avoir le solde et les enregistrer dans un db pour pouvoir avoir un apercu des gains/pertes
+
+copiez le repertoire Dashboard-Crypto-PNL/recap_balance a l'emplacement de votre choix par ex /home/user
+
+1. configuration mysql
+
+    Modifiez le fichier recap_balance/db.sql pour qu'il s'adapte a vos besoins vous pouvez changer le nom de la table par exemple exchanges_wallets mais vous devre modifier 
+   
+   ```
+   CREATE TABLE `exchanges_wallets` (
+    `id` int NOT NULL,
+    `exchange` text NOT NULL,
+    `date` datetime NOT NULL,
+    `wallet` float NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    ```
+
+    modifier le fichier  dashboard\scripts\php\jsons\config_interface.json a ce niveau la
+
+
+        ```
+    "exchanges_infos" : {
+        "isExchangeRecap" : "True",
+        "nom_db" : "exchanges_wallets",  -> changer le nom 
+
+        ```
+
+    sinon vous pouvez ne touché a rien :-)
+
+    Connectez vous a mysql avec l'utilisateur que l'on viens de créer :
+
+    ```
+    mysql -u [nom d'utilisateur] -p
+    ```
+    
+    on selectionne la base de donnée dashboard
+
+    ```
+    USE dashboard;
+    ```
+
+    on importe le fichier db.sql
+
+    ```
+    source <path>/recap_balance/db.sql
+    ```
+
+
+2. Configuration du fichier recap_balance/config-bot.cfg
+    c'est dans ce fichier que la configuration ce fait 
+    
+    ```
+    [BINANCE.FUTURES.1]                               --> nom unique qui sert a pourvoir selectionner le bon compte et sa configuration dans le fichier recap associé 
+    exchange_name = binance_futures_1                 --> nom unique pour le dashboard lie au fichier scripts/php/jsons/config_interface.json  
+    apiKey =                                          --> Api key de l'exchange
+    secret =                                          --> Secret de l'exchange 
+
+    [BINANCE.SPOT.1]
+    exchange_name = binance_spot_1
+    STABLECOIN = USDT                                  --> pour les compte spot il fau spécifié le stablecoin
+    apiKey = 
+    secret = 
+
+    [BITGET.FUTURES.1]
+    exchange_name = bitget_futures_1
+    apiKey = 
+    secret = 
+    password = 
+
+    [BITGET.FUTURES.2]
+    exchange_name = bitget_futures_2
+    apiKey = 
+    secret = 
+    password = 
+
+    [BITGET.SPOT.1]
+    exchange_name = bitget_spot_1
+    STABLECOIN = USDT
+    apiKey = 
+    secret = 
+    password = 
+
+
+    [MYSQL]
+    #hote Mysql
+    host=localhost              --> adresse du server mysql localhost si sur le meme serveur
+    #user Mysql
+    user=                       --> utilisateur de la db
+    #password Mysql
+    password=                   --> mot de passe de la db
+    #base de donnée Mysql
+    database=dashboard          --> nom de la db ici dashboard
+    
+    ```
+
+
+3. configuration des fichier python
+   
+    il faut un fichier python par exchange et par type de compte. 1 fichier pour le compte spot de bitget par exemple et 1 fichier pour le compte futures par ex :
+
+    recap_bitget_futures_1.py
+    recap_bitget_spot_1.py
+
+    modifier les fichiers a ce niveau 
+
+    
+    ```
+    ############################
+    #### Partie a modifier #####
+    ############################
+    #choix du compte dans le fichhier de config
+    apiKey = str(config['BINANCE.FUTURES.1']['apiKey'])                 --> modifier BINANCE.FUTURES.1 pour selectioner le bon compte dans le fichier config-bot.cfg
+    secret = str(config['BINANCE.FUTURES.1']['secret'])                 --> modifier BINANCE.FUTURES.1 pour selectioner le bon compte dans le fichier config-bot.cfg
+    EXCHANGE_NAME = str(config['BINANCE.FUTURES.1']['exchange_name'])   --> modifier BINANCE.FUTURES.1 pour selectioner le bon compte dans le fichier config-bot.cfg
+    ######################################
+    #### FIN de la partie a modifier #####
+    ######################################
+    
+    ```
+
+
+4. modification du script de bash recap_balance\start_recap.sh
+   
+    ```
+    #!/bin/bash
+    echo "Passage dans l'environement virtuel"
+    PATH=/<path>/recap_balance                       --> Mpodifier <path> par le paht complet du repertoire ou se trouve le répertoire recat_balance
+    cd $PATH
+    source $PATH/.venv/bin/activate
+
+
+    echo "Execution du recap"
+    for file in ./*.py; do
+        if [ -f "$file" ]; then
+            python $file
+            sleep 15s
+        fi
+    done
+
+    ```
+
+5. execution toutes les 2 heures
+   
+   Ajouter une tache cron toutes les 1 heures et 20 min (si je ne me suis pas trompé ^^) en modifiant le <path> avec le votre comme ceci :  
+
+```
+    20 * * * * bash /<path>/recap_balance/start_recap.sh >> /<path>/recap_balance/recap_balance.log
+```
 
 
 
+voila je crois ne rien avoir oublié :-) 
 
-généré un mot de passe pour l'interface en ligne de commande :
-
-php -r "echo password_hash('password1234', PASSWORD_DEFAULT);"
 
 # Soutien
 Ce code est disponible pour tous si vous voulez me "soutenir :-)" voici un lien d'affiliation Bitget : https://partner.bitget.com/bg/85MZE2
