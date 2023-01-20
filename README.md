@@ -656,14 +656,46 @@ copiez le repertoire Dashboard-Crypto-PNL/recap_balance a l'emplacement de votre
     # apikey pour https://polygonscan.com/
     apikey_matic = ""                                   --> Votre apikey pour https://polygonscan.com/
 
-    addresses = {
-        "BTC": "",                                      --> vos adresse de wallet sur votre ledger
-        "ETH": "",
-        "XRP": "",
-        "MATIC": "",
-        "DOGE": "",
-        "TRX":""
+    addresses = [
+    {
+        "name" : "BTC", 
+        "address" : [ 
+            "addresse_wallet" ,                 --> vos adresse de wallet sur votre ledger je n'ai pas trouvé comment avoir l'adresse 
+            "addresse_wallet"                   --> général du wallet donc il faut mettre toute les adresse ou on a recu la crypto
+        ]
+    },
+    {
+        "name" : "ETH", 
+        "address" : [ 
+            "addresse_wallet" 
+        ]
+    },
+    {
+        "name" : "XRP", 
+        "address" : [ 
+            "addresse_wallet" 
+        ]
+    },
+    {
+        "name" : "MATIC", 
+        "address" : [ 
+            "addresse_wallet" 
+        ]
+    },
+    {
+        "name" : "DOGE", 
+        "address" : [ 
+            "addresse_wallet" ,
+            "addresse_wallet"
+        ]
+    },
+    {
+        "name" : "TRX", 
+        "address" : [ 
+            "addresse_wallet" 
+        ]
     }
+]
 
     EXCHANGE_NAME = "ledger_1"                     --> le nom de la ledger mettre le meme nom dans le fichier config_interface.json
     ######################################
