@@ -60,6 +60,12 @@ Avant de commencer, vous aurez besoin des éléments suivants :
 
     ```
     sudo a2enmod php7.0
+
+    ou 
+
+    sudo a2enmod php8.1
+
+    suivant votre version
     ```
 
 4. Redémarrez le serveur Apache pour prendre en compte les modifications :
@@ -637,21 +643,57 @@ copiez le repertoire Dashboard-Crypto-PNL/recap_balance a l'emplacement de votre
     ```
 
 
+    pour le fichier recap_ledger_1.py
+
+    voici les infos a modifier dans le fichier 
+
+    ```
+    ############################
+    #### Partie a modifier #####
+    ############################
+    #api key pour https://etherscan.io/myaccount
+    apikey_etherscan = ""                                --> Votre apikey pour https://etherscan.io/myaccount
+    # apikey pour https://polygonscan.com/
+    apikey_matic = ""                                   --> Votre apikey pour https://polygonscan.com/
+
+    addresses = {
+        "BTC": "",                                      --> vos adresse de wallet sur votre ledger
+        "ETH": "",
+        "XRP": "",
+        "MATIC": "",
+        "DOGE": "",
+        "TRX":""
+    }
+
+    EXCHANGE_NAME = "ledger_1"                     --> le nom de la ledger mettre le meme nom dans le fichier config_interface.json
+    ######################################
+    #### FIN de la partie a modifier #####
+    ######################################
+
+    ```
+
+    pour le moment il n'y a que ces tokens mais il est facile d'en rajouter :-)
+
+
 4. modification du script de bash recap_balance\start_recap.sh
    
     ```
     #!/bin/bash
     echo "Passage dans l'environement virtuel"
-    PATH=/<path>/recap_balance                       --> Mpodifier <path> par le paht complet du repertoire ou se trouve le répertoire recat_balance
+
+    now=$(date +"%d/%m/%Y %T")
+    echo $now
+
+    PATH=/home/angelz/recap_balance     -> Modifier <path> par le paht complet du repertoire ou se trouve le répertoire 
     cd $PATH
     source $PATH/.venv/bin/activate
 
-
     echo "Execution du recap"
+
+
     for file in ./*.py; do
         if [ -f "$file" ]; then
             python $file
-            sleep 15s
         fi
     done
 

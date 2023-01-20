@@ -28,6 +28,11 @@
                 "nom_exchange" : "bitget_futures_2",
                 "nom_dashboard" : "Bitget Future 2 CopyTrading CryptoRobot",
                 "initial_wallet" : "20.0"
+            },
+            { 
+                "nom_exchange" : "ledger_1",
+                "nom_dashboard" : "Ledger 1",
+                "initial_wallet" : "100"
             }
         ]
     },

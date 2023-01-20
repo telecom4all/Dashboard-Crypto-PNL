@@ -247,6 +247,7 @@ function traitement_infos_bots(arg){
 
     liste_bots.push(data_bot);
   });
+  
   if(isFirstLoad == "True"){
     isFirstLoad = "False";
     affiche_bots_global();
@@ -432,12 +433,18 @@ function traitement_liste_exchange(arg){
   
   let nb_exchange = 0
  
+  var liste_nom_exchange_ledger=[];
+
   exchanges.forEach((exchange) => {
     nb_exchange = nb_exchange + 1;
     initial_wallet = exchange.initial_wallet
     nom_dashboard = exchange.nom_dashboard
     nom_exchange = exchange.nom_exchange
     
+    if (nom_exchange.indexOf("ledger") !== -1) {
+      liste_nom_exchange_ledger.push({"nom_exchange": nom_exchange, "initial_wallet" : initial_wallet});
+  }
+
     if (nb_exchange % 2 === 0) {
       html_exchange += `<div class="pair div_exchange">`;
     } else {
@@ -458,9 +465,25 @@ function traitement_liste_exchange(arg){
         dataChart.push(data);
       }
     });
-    var lastItem = wallet_value.pop();
-    let evolution = ((lastItem - initial_wallet)/initial_wallet)*100
-    let res = evolution.toFixed(2);
+
+    var lastItem = 0;
+    let evolution = 0;
+    let res = 0;
+    if(nom_exchange.indexOf("ledger") === -1){
+      lastItem = wallet_value.pop();
+      evolution = ((lastItem - initial_wallet)/initial_wallet)*100
+      res = evolution.toFixed(2);
+      let data_chart = {
+        dataChart : dataChart,
+        container : 'graph_exchange_'+nom_exchange,
+        nom_dashboard : nom_dashboard
+      }
+      
+      tableau_data_chart.push(data_chart);
+
+    }
+    
+    
 
     html_exchange += `<h4><center>${nom_dashboard}</center></h4>`;
     html_exchange += `<table width='100%'>`;
@@ -489,22 +512,161 @@ function traitement_liste_exchange(arg){
     html_exchange += `<div id="graph_exchange_${nom_exchange}"></div>`;
     html_exchange += `</div>`;
     
-    let data_chart = {
-      dataChart : dataChart,
-      container : 'graph_exchange_'+nom_exchange,
-      nom_dashboard : nom_dashboard
-    }
-    
-    tableau_data_chart.push(data_chart);
+   
   });
   $(`#main`).html(html_exchange);
+
+  affiche_ledger(arg, liste_nom_exchange_ledger);
 
   tableau_data_chart.forEach((data_chart) => {
     affichage_graph(data_chart)
   });
 }
 
+function affiche_ledger(arg, liste_nom_exchange_ledger){
+  liste_nom_exchange_ledger.forEach((item, index) => {
+    nom_ledger = item.nom_exchange
+    initial_wallet = item.initial_wallet
+    var dataFiltrer = [];
+    var wallet_value = [];
+    arg.walletExchange.forEach((item, index) => {
+      if (item.name.indexOf(nom_ledger) !== -1) {
+       data = {
+        "name":item.name,
+        "value":item.value,
+        "timestamp":item.timestamp,
+        "date":item.date        
+       }
+       dataFiltrer.push(data)       
+      }
+    });
+    
+    var result = {};
+    var uniqueNames = [];
+    for (var i = 0; i < dataFiltrer.length; i++) {
+      var name = dataFiltrer[i].name;
+      if (uniqueNames.indexOf(name) === -1) {
+        uniqueNames.push(name);
+        Object.defineProperty(result, name, { value: [], writable: true, enumerable: true, configurable: true });
+      }
+      // On ajoute un objet contenant les informations spécifiées à la propriété correspondante
+      result[name].push({date: dataFiltrer[i].date, value: dataFiltrer[i].value, timestamp: dataFiltrer[i].timestamp});
+    }
 
+    var wallet_total_exchange = [];
+    var series_general = [];
+    for (var prop in result) {
+      var data_wallet_ledger = result[prop]
+      var nom = prop
+      let nom_dashboard = "";
+      var serie_var = [];
+      data_wallet_ledger.forEach((item, index) => {
+        if(nom == nom_ledger){
+          nom_dashboard = nom.charAt(0).toUpperCase() + nom.slice(1).replace(/_/g, " ");
+          wallet_total_exchange.push(item.value)
+
+        }
+        else{
+          nom_dashboard = nom.replace(/^.*_/, ""); // remplace tout ce qui précède "_" par une chaîne vide
+          nom_dashboard = nom_dashboard.slice(0,1).toUpperCase() + nom_dashboard.slice(1);
+
+        } 
+        
+        var text = formatDateMin(new Date(item.date))
+        var data={
+          x: new Date(item.date),
+          y: parseInt(item.value),
+          name:text
+        };
+        serie_var.push(data)
+        
+      });
+
+      let data_chart = {
+        dataChart : serie_var,
+        nom_variable : nom,
+        nom_dashboard : nom_dashboard
+      }
+
+      series_general.push(data_chart)
+
+    
+    }
+    
+    var lastItem = wallet_total_exchange.pop();
+    let evolution = ((lastItem - initial_wallet)/initial_wallet)*100
+    let res = evolution.toFixed(2);
+    $("#wallet_actual_"+nom_ledger).text(lastItem)
+    $("#evolution_"+nom_ledger).text(res + " %")
+    if(evolution > 0){
+      $("#evolution_"+nom_ledger).css("color", "green"); 
+    }
+    else if(evolution < 0){
+      $("#evolution_"+nom_ledger).css("color", "red"); 
+    }
+    else{
+      $("#evolution_"+nom_ledger).css("color", "white"); 
+    }
+
+     
+    affiche_graph_ledger(series_general, nom_ledger);
+  });
+  
+}
+
+function affiche_graph_ledger(series, nom_ledger){
+  
+  var seriesData = [];
+  // On parcours le tableau data pour remplir les données pour chaque série
+  for (var i = 0; i < series.length; i++) {
+    var currentSeries = {
+        name: series[i].nom_dashboard,
+        data: []
+    };
+    for (var j = 0; j < series[i].dataChart.length; j++) {
+        // On ajoute les données pour cette série
+        currentSeries.data.push([series[i].dataChart[j].x, series[i].dataChart[j].y]);
+    }
+    // On ajoute la série avec ses données au tableau des séries
+    seriesData.push(currentSeries);
+  }
+
+  nom_dashboard = nom_ledger.charAt(0).toUpperCase() + nom_ledger.slice(1).replace(/_/g, " ");
+  // On utilise la méthode Highcharts pour créer le graphique
+  var chart = new Highcharts.chart('graph_exchange_'+nom_ledger, {
+    chart: {
+      type: 'line',
+      zoomType: 'xy', // permet de zoomer uniquement sur l'axe des x
+      panKey: 'shift', // permet de panoramiquer en maintenant la touche shift enfoncée
+      panning: true, // permet de panoramiquer en utilisant la souris
+      resetZoomButton: {
+          position: {
+              align: 'right', // positionne le bouton de reset de zoom à droite
+              verticalAlign: 'top', // positionne le bouton de reset de zoom en haut
+              x: -10,
+              y: 10
+          },
+          relativeTo: 'chart' // le bouton de reset de zoom est relatif au graphique
+      }
+    },
+    title: {
+        text: 'Evolution des wallets de ' + nom_dashboard
+    },
+    xAxis: {
+        type: 'datetime',
+        title: {
+            text: 'Date'
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Valeur'
+        }
+    },
+    series: seriesData  
+    
+  });
+}
 
 function affiche_bots_global(){
   $("#main").empty(); 
