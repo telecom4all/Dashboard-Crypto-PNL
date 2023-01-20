@@ -724,11 +724,6 @@ ou en cryptos :
 - SOL --> AsLvBCG1fpmpaueTYBmU5JN5QKVkt9a1dLR44BAGUZbV
 
 # Remerciements
-Merci à titouannwtt pour son code duquel je me suis grandement inspiré !! : https://github.com/titouannwtt/bot-trading-advanced
+Merci à titouannwtt pour son code duquel je me suis grandement inspiré !! si vous voulez le soutenir c'est par là -->
 
-Si vous voulez le soutenir :
-- lien affiliation Binance : https://www.binance.me/fr/activity/referral/offers/claim?ref=CPA_00C08H2X8E
-- dons cryptos :
-  - Adresse BTC : 3GYhBgZMfgzqjYhVhc2w53oMcvZb4jfGfL
-  - Adresse ETH (Réseau ERC20) : 0x43fC6F9B8b1CfBd83b52a1FD1de510effe0A49a7
-  - Adresse SOL : 5QKaHfJWxAZ6sbU5QMb2e14yAAZ45iBH91SBgnheK26v
+https://github.com/titouannwtt/bot-trading-advanced
