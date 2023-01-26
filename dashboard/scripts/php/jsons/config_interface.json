@@ -1,5 +1,6 @@
 {
     "titre" : "Dashboard Crypto",
+    "api_openai" : "sk-xxxxxxxx",
     "exchanges_infos" : {
         "isExchangeRecap" : "True",
         "nom_db" : "exchanges_wallets",
@@ -7,27 +8,27 @@
             { 
                 "nom_exchange" : "binance_futures_1",
                 "nom_dashboard" : "Binance Futures 1",
-                "initial_wallet" : "50.0"
+                "initial_wallet" : "100.0"
             },
             { 
                 "nom_exchange" : "binance_spot_1",
                 "nom_dashboard" : "Binance Spot 1",
-                "initial_wallet" : "50.0"
+                "initial_wallet" : "100.0"
             },
             { 
                 "nom_exchange" : "bitget_futures_1",
                 "nom_dashboard" : "Bitget Futures 1 Bot Perso",
-                "initial_wallet" : "16.0"
+                "initial_wallet" : "100.0"
             },
             { 
                 "nom_exchange" : "bitget_spot_1",
                 "nom_dashboard" : "Bitget Spot 1 Bot Perso",
-                "initial_wallet" : "16.0"
+                "initial_wallet" : "100.0"
             },
             { 
                 "nom_exchange" : "bitget_futures_2",
                 "nom_dashboard" : "Bitget Future 2 CopyTrading CryptoRobot",
-                "initial_wallet" : "20.0"
+                "initial_wallet" : "100.0"
             },
             { 
                 "nom_exchange" : "ledger_1",

@@ -3,6 +3,16 @@ var config_interface;
 var liste_bots = [];
 var isAuthenticated;
 var isFirstLoad = "True";
+
+//chatgpt variable
+var api_openai;
+var chatOutput;
+var chatInput;
+var chatSubmit;
+var spinner;
+var messageHistory = [];
+
+
 // liste des widget tradingview et leur config
 var symbols_tradingview = [
   { 
@@ -149,7 +159,7 @@ function getConfigInterface(){
     html_login += '<center>'; 
     html_login += '</div">';
     
-    //insertion du de la div tradingview_dashboard dans la page 
+    //insertion du de la div  dans la page 
     $("#main").html(html_login)
 
   }
@@ -293,6 +303,9 @@ function onclick_bt_menu(id){
   else if(id == "general"){
     affiche_bots_global();
   }
+  else if(id == "ChatGPT"){
+    affiche_chatgpt();
+  }
   else if(id == "deconnexion"){
     let result = confirm("Voulez-vous vraiment vous deconnecter ?");
     if (result) {
@@ -314,6 +327,7 @@ function traitement_config_interface(arg) {
   config_interface = arg.config_interface;
   let titre_dashboard = '<h1 class="titre_dashboard"><center>' + config_interface.titre + '</center></h1>';
   let is_exchange = config_interface.exchanges_infos.isExchangeRecap;
+  api_openai = config_interface.api_openai;
 
   $("#titre_dashboard").html(titre_dashboard)
 
@@ -340,6 +354,10 @@ function traitement_config_interface(arg) {
   // Boutton Macro
   html_menu += '<button class="bt_menu bp_normal" id="macro_dashboard" onclick="onclick_bt_menu(this.id)">Macro Dashboard</button>';
 
+  //ChatGPT
+  html_menu += '<button class="bt_menu bp_normal" id="ChatGPT" onclick="onclick_bt_menu(this.id)">Chat GPT Perso</button>';
+
+
   // Boutton Deconnexion
   html_menu += '<button class="bt_menu bp_deco" id="deconnexion" onclick="onclick_bt_menu(this.id)">Deconexion</button>';
 
@@ -353,6 +371,88 @@ function traitement_config_interface(arg) {
   getInfosbots();
 }
 
+//affichage de chat gpt
+function affiche_chatgpt(){
+  $("#main").empty();
+
+  var root = document.baseURI;
+  var html_chatgpt = '<h2 class="titre_page"><center>Chat GPT Perso</center></h2>';
+  html_chatgpt += '<div class="spinner">';
+  html_chatgpt += '<img src="'+root+'Book.gif" alt="Loading spinner">';
+  html_chatgpt += '</div>';
+  html_chatgpt += '<div id="chat-container">';
+  html_chatgpt += '<div id="chat-output"></div>';
+  html_chatgpt += '<textarea id="chat-input" placeholder="Tapez votre message ici" rows="10"></textarea>';
+  html_chatgpt += '<button id="chat-submit">Envoyer</button>';
+  html_chatgpt += '';
+  
+  html_chatgpt += '</div>';
+      
+  $("#main").html(html_chatgpt);  
+
+
+  chatOutput = document.getElementById("chat-output");
+  chatInput = document.getElementById("chat-input");
+  chatSubmit = document.getElementById("chat-submit");
+  spinner = document.querySelector(".spinner");
+  messageHistory = [];
+
+  chatSubmit.addEventListener("click", function () {
+    //Récupérer le message entré par l'utilisateur
+    const message = chatInput.value;
+    //Vider la zone de saisie de message
+    chatInput.value = "";
+
+    //Ajouter le message à l'historique des messages
+    messageHistory.push(message);
+
+    // Show the spinner
+    //spinner.classList.add("active");
+    alert(api_openai)
+    showSpinner();
+
+    // Utiliser fetch pour envoyer le message et l'historique à GPT et obtenir une réponse
+    
+    fetch("https://api.openai.com/v1/completions", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer "+api_openai
+      },
+      body: JSON.stringify({
+          model: "text-davinci-003",
+          prompt: messageHistory.join(' '),
+          temperature: 0.7,
+          max_tokens: 4000,
+          n:1,
+      })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const response = data.choices[0].text;
+        let responseType = 'text';
+        if (/(\{|\}|\(|\)|\[|\])/.test(response)) {
+            responseType = 'code';
+        }
+        chatOutput.innerHTML += `<div class="question">You: ${message}</div>`;
+        chatOutput.innerHTML += `<div class="response ${responseType}"><pre>${response}</pre></div>`;
+
+        // Hide the spinner
+        hideSpinner();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("il y a eu une erreur relancer la question avec peut etre moins de mot")
+        hideSpinner();
+    });
+});
+  
+}
 
 //affichage de la partie tradingview
 function affiche_trading_view(){
@@ -1010,7 +1110,18 @@ function affichage_graph(data_chart){
 
 
 
+function showSpinner() {
+  var div_general = document.getElementById("chat-container");
+  spinner.classList.add("active");
+  div_general.classList.remove("opa");
+  
+}
 
+function hideSpinner() {
+  var div_general = document.getElementById("chat-container");
+  spinner.classList.remove("active");
+  div_general.classList.add("opa");
+}
 
 //Fonction pour formater une date en utilisant un format de type "jj/mm/aaaa"
 function formatDateMin(date) {
