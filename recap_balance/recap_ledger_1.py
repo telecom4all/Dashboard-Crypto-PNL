@@ -18,39 +18,41 @@ addresses = [
     {
         "name" : "BTC", 
         "address" : [ 
-            "addresse_wallet" , 
-            "addresse_wallet"
+            "" , 
+            "",
+            ""
         ]
     },
     {
         "name" : "ETH", 
         "address" : [ 
-            "addresse_wallet" 
+            "" 
         ]
     },
     {
         "name" : "XRP", 
         "address" : [ 
-            "addresse_wallet" 
+            "" 
         ]
     },
     {
         "name" : "MATIC", 
         "address" : [ 
-            "addresse_wallet" 
+            "" 
         ]
     },
     {
         "name" : "DOGE", 
         "address" : [ 
-            "addresse_wallet" ,
-            "addresse_wallet"
+            "" ,
+            "",
+            ""
         ]
     },
     {
         "name" : "TRX", 
         "address" : [ 
-            "addresse_wallet" 
+            "" 
         ]
     }
 ]

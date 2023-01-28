@@ -4,7 +4,7 @@ echo "Passage dans l'environement virtuel"
 now=$(date +"%d/%m/%Y %T")
 echo $now
 
-PATH=/home/angelz/recap_balance
+PATH=/<path>/recap_balance
 cd $PATH
 source $PATH/.venv/bin/activate
 

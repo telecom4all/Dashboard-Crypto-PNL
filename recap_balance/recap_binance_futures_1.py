@@ -4,8 +4,9 @@ import datetime
 import configparser
 config = configparser.ConfigParser()
 config.read('config-bot.cfg')
+import time
 
-
+time.sleep(5)
 ############################
 #### Partie a modifier #####
 ############################
